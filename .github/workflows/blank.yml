@@ -1,0 +1,37 @@
+name: Matrix Build with Artifacts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Matrix Build Job
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [16, 18, 20]  # ✅ Updated Node versions
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: matrix-d35bfb3
+        run: echo "Building for OS=${{ matrix.os }} and Node=${{ matrix.node }}"
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for OS=${{ matrix.os }} and Node=${{ matrix.node }}" > build-output.txt
+          echo "Timestamp: $(date)" >> build-output.txt
+          echo "Done ✅" >> build-output.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-d35bfb3-${{ matrix.os }}-node${{ matrix.node }}
+          path: build-output.txt
